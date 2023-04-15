@@ -44,7 +44,7 @@ public class Controleur {
         ObjectOutputStream  objectOutputStream = new ObjectOutputStream(server.getOutputStream());
         objectOutputStream.writeObject(p);
 
-        RegistrationForm InscriptionForm = new RegistrationForm(name, familyName, email, studentNumber,course);
+        RegistrationForm InscriptionForm = new RegistrationForm(name, familyName, email, studentNumber, course);
         objectOutputStream.writeObject(InscriptionForm);
 
         ObjectInputStream  objectInputStream = new ObjectInputStream(server.getInputStream());
