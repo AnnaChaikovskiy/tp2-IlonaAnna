@@ -1,88 +1,61 @@
 package client.MVC;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import server.models.Course;
+import server.models.RegistrationForm;
+
 import java.io.IOException;
-import java.net.URL;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+
+public class Controleur {
+    public final static String REGISTER_COMMAND = "INSCRIRE";
+    public final static String LOAD_COMMAND = "CHARGER";
+    public static ArrayList<Course> CourseRequest(String session) throws IOException, ClassNotFoundException {
+
+        Socket server = new Socket("localhost", 1337);
+        ArrayList<Course> courseList = new ArrayList<Course>();
+        String p = (LOAD_COMMAND + " " + session);
 
 
-public class Controleur implements Initializable {
-    private Modele modele;
-    private Scene scene;
-    private TableView<Course> screen;
-    private TableColumn<Course, String> code;
-    private TableColumn<Course, String> name;
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(server.getOutputStream());
+        objectOutputStream.writeObject(p);
 
-    ObservableList<Course> showCourses = FXCollections.observableArrayList(
-            new Course("hello", "nice", "lol")
-    );
+        ObjectInputStream objectInputStream = new ObjectInputStream(server.getInputStream());
+        Object object = objectInputStream.readObject();
 
+        courseList = (ArrayList<Course>) object;
+        for (int i = 0; i < courseList.size(); i++) {
+            String line = String.valueOf(i+1) + ".   " + courseList.get(i).getCode() + "     " + courseList.get(i).getName();
+            System.out.println(line);
+        }
+        objectOutputStream.close();
+        objectInputStream.close();
+        server.close();
 
-    public Controleur(Modele m, Scene s, TableView screen, TableColumn code, TableColumn name) {
-        this.modele = m;
-        this.scene = s;
-        this.screen = screen;
-        this.code = code;
-        this.name = name;
-
+        return courseList;
     }
+    public static void RegistrationRequest(String name, String familyName, String email, String studentNumber, Course course) throws IOException, ClassNotFoundException {
+        String p = REGISTER_COMMAND;
 
-    public void charger(String yourSession) throws IOException, ClassNotFoundException {
-        ArrayList<Course> x = new ArrayList<Course>();
-        x = (ArrayList<Course>) Modele.CourseRequest(yourSession);
-        ObservableList list = FXCollections.observableList(x);
-       // x.get(0).getCode();
-        //x.get(0).getName();
-        //screen.getColumns().add(x);
-        //code.getColumns().add(x.get(0).getCode());
-        //name.getColumns().add(x.get(0).getName());
-        //ObservableList<Course> showCourses = screen.getItems();
-        //showCourses.add(list);
-        //screen.setItems(showCourses);
-        Course show = new Course(
-                Modele.CourseRequest(yourSession).get(0).getName(),
-                Modele.CourseRequest(yourSession).get(0).getCode(),
-                Modele.CourseRequest(yourSession).get(0).getSession());
-        ObservableList<Course> idk = screen.getItems();
-        idk.add(show);
-        screen.setItems(idk);
-        //Modele.CourseRequest(yourSession).get(0).getCode();
+        Socket server = new Socket("localhost", 1337);
 
+        ObjectOutputStream  objectOutputStream = new ObjectOutputStream(server.getOutputStream());
+        objectOutputStream.writeObject(p);
 
+        RegistrationForm InscriptionForm = new RegistrationForm(name, familyName, email, studentNumber,course);
+        objectOutputStream.writeObject(InscriptionForm);
 
+        ObjectInputStream  objectInputStream = new ObjectInputStream(server.getInputStream());
+        Object object = objectInputStream.readObject();
 
-        //this.screen.setItems(list);
-        System.out.print(x);
-        System.out.print(x.get(0).getName());
-        //ObservableList<>
-        //showCourses();
+        System.out.println((String)object);
 
-        //Modele.CourseRequest(yourSession);
+        objectOutputStream.close();
+        objectInputStream.close();
+        server.close();
     }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        code.setCellValueFactory(new PropertyValueFactory<Course, String>("code"));
-        name.setCellValueFactory(new PropertyValueFactory<Course, String>("name"));
-
-        screen.setItems(showCourses);
-    }
-
-    //public void showCourses() {
-
-    //}
-
-
-
-
 
 }
 

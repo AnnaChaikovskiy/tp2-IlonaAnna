@@ -100,7 +100,7 @@ public class Client {
                     strChoice = "unknown";
             }
 
-            System.out.println("Les cours offerts pendant la session " + choice + " sont:");
+            System.out.println("Les cours offerts pendant la session " + String.valueOf(strChoice) + " sont:");
 
             crs = CourseRequest (strChoice);
 
