@@ -1,5 +1,6 @@
 package client.MVC;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -10,12 +11,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import server.models.Course;
 
 /**
  * La classe "Vue" permet de créer l'interface
@@ -23,6 +26,14 @@ import javafx.stage.Stage;
  * de l'Université de Montréal
  */
 public class Vue extends Application {
+
+
+    private static Controleur controleur;
+
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Vue.launch(args);
     }
@@ -34,7 +45,18 @@ public class Vue extends Application {
      * ainsi que la "Scene" de l'interface
      */
     public void start(Stage primaryStage) throws Exception {
+
+        /**
+         *
+         */
         Pane root = new Pane();
+
+        /**
+         * Initialisation de la scène avec ses dimensions
+         */
+        Scene scene = new Scene(root, 800, 550);
+
+        //controleur = new Controleur(new Modele(), scene);
 
         /**
          * Change de couleur la scène de l'interface
@@ -57,18 +79,24 @@ public class Vue extends Application {
          * Initialisation du tableau interactif présentant
          * la liste de cours selon la session sélectionnée
          */
-        TableView screen = new TableView();
+        TableView<Course> screen = new TableView<Course>();
         screen.setEditable(true);
 
-        TableColumn code = new TableColumn<>("Code");
-        TableColumn cours = new TableColumn<>("Cours");
+        TableColumn code = new TableColumn<Course, Course>("Code");
+        code.setCellFactory(new PropertyValueFactory<Course,Course>("code"));
+
+        TableColumn name = new TableColumn<Course, Course>("Cours");
+        name.setCellFactory(new PropertyValueFactory<Course, Course>("name"));
+
+
 
         screen.setLayoutX(20);
         screen.setLayoutY(50);
         screen.setPrefHeight(425);
         screen.setPrefWidth(360);
 
-        screen.getColumns().addAll(code, cours);
+        screen.getColumns().add(code);
+        screen.getColumns().add(name);
         screen.setColumnResizePolicy(screen.CONSTRAINED_RESIZE_POLICY);
         root.getChildren().add(screen);
 
@@ -106,13 +134,26 @@ public class Vue extends Application {
         charger.setLayoutY(508);
         root.getChildren().add(charger);
 
-        ObservableList<String> items = FXCollections.observableArrayList("Hiver", "Été", "Automne");
+        ObservableList<String> items = FXCollections.observableArrayList("Hiver", "Ete", "Automne");
         ChoiceBox<String> session = new ChoiceBox<>(items);
 
         session.setLayoutX(50);
         session.setLayoutY(508);
         session.setPrefWidth(100);
         root.getChildren().add(session);
+
+        charger.setOnAction((actionEvent) -> {
+            String yourSession = session.getValue();
+            try {
+                controleur.charger(yourSession);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+
 
         /**
          * Initialisation du titre de la
@@ -165,10 +206,10 @@ public class Vue extends Application {
         root.getChildren().add(envoyer);
 
         /**
-         * Initialisation de la scène avec ses dimensions
+         *
          */
-        Scene scene = new Scene(root, 800, 550);
 
+        controleur = new Controleur(new Modele(), scene, screen, code, name);
 
         /**
          * Mise à jour des modifications apportées à la scène

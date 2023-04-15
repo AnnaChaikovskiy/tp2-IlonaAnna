@@ -100,7 +100,7 @@ public class Client {
                     strChoice = "unknown";
             }
 
-            System.out.println("Les cours offerts pendant la session d'automne sont:");
+            System.out.println("Les cours offerts pendant la session " + choice + " sont:");
 
             crs = CourseRequest (strChoice);
 
