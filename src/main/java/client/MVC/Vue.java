@@ -20,15 +20,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import server.models.Course;
 
+
 /**
  * La classe "Vue" permet de créer l'interface
  * graphique d'un site d'inscription à des cours
  * de l'Université de Montréal
  */
 public class Vue extends Application {
-
-
-    private static Controleur controleur;
 
     /**
      *
@@ -45,6 +43,7 @@ public class Vue extends Application {
      * ainsi que la "Scene" de l'interface
      */
     public void start(Stage primaryStage) throws Exception {
+
 
         /**
          *
@@ -82,11 +81,14 @@ public class Vue extends Application {
         TableView<Course> screen = new TableView<Course>();
         screen.setEditable(true);
 
-        TableColumn code = new TableColumn<Course, Course>("Code");
-        code.setCellFactory(new PropertyValueFactory<Course,Course>("code"));
+        TableColumn code = new TableColumn<Course, String>("Code");
+        code.setCellValueFactory(new PropertyValueFactory<Course,String>("code"));
 
-        TableColumn name = new TableColumn<Course, Course>("Cours");
-        name.setCellFactory(new PropertyValueFactory<Course, Course>("name"));
+        TableColumn name = new TableColumn<Course, String>("Cours");
+        name.setCellValueFactory(new PropertyValueFactory<Course, String>("name"));
+
+        screen.getColumns().add(code);
+        screen.getColumns().add(name);
 
 
 
@@ -95,8 +97,6 @@ public class Vue extends Application {
         screen.setPrefHeight(425);
         screen.setPrefWidth(360);
 
-        screen.getColumns().add(code);
-        screen.getColumns().add(name);
         screen.setColumnResizePolicy(screen.CONSTRAINED_RESIZE_POLICY);
         root.getChildren().add(screen);
 
@@ -141,19 +141,6 @@ public class Vue extends Application {
         session.setLayoutY(508);
         session.setPrefWidth(100);
         root.getChildren().add(session);
-
-        charger.setOnAction((actionEvent) -> {
-            String yourSession = session.getValue();
-            try {
-                controleur.charger(yourSession);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-
 
         /**
          * Initialisation du titre de la
@@ -209,7 +196,7 @@ public class Vue extends Application {
          *
          */
 
-        controleur = new Controleur(new Modele(), scene, screen, code, name);
+        //controleur = new Controleur(new Modele(), scene, screen);
 
         /**
          * Mise à jour des modifications apportées à la scène
@@ -218,6 +205,22 @@ public class Vue extends Application {
         primaryStage.setTitle("Inscription UdeM");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        final ArrayList<Course>[] courseArrayList = new ArrayList[]{new ArrayList<>()};
+        charger.setOnAction((actionEvent) -> {
+            String yourSession = session.getValue();
+            try {
+                courseArrayList[0] = Controleur.CourseRequest(yourSession);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(courseArrayList[0].isEmpty());
+            for (int i=0; i < courseArrayList[0].size() ; i++) {
+                screen.getItems().add(courseArrayList[0].get(i));
+            }
+        });
     }
 
 }
