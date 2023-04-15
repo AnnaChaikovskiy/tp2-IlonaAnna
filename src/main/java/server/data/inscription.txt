@@ -1,2 +1,3 @@
 Automne	IFT2255	12345678	Michalis	Famelis	mfamelis@iro.umontreal.ca
 Ete	IFT2256	123456		Anna		Chaikovskiy	awgjhasdlgjkh
+Hiver	IFT1025	123456		Anna		Chaikovskiy	anna.tch234@gmail.com
