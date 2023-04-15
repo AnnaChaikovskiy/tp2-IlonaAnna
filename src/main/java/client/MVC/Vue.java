@@ -27,14 +27,16 @@ import server.models.RegistrationForm;
 
 /**
  * La classe "Vue" permet de créer l'interface
- * graphique d'un site d'inscription à des cours
+ * graphique d'un site pour s'inscription à des cours
  * de l'Université de Montréal
  */
 public class Vue extends Application {
 
     /**
-     *
-     * @param args
+     * La méthode "main" permet de
+     * lancer l'exécution du programme
+     * @param args rêquete du client en format
+     *             String stocké dans un tableau
      */
     public static void main(String[] args) {
         Vue.launch(args);
@@ -42,15 +44,17 @@ public class Vue extends Application {
 
     @Override
     /**
-     * La méthode "start" permet d'inizialiser
-     * les éléments qui se retrouve dans le "Stage"
-     * ainsi que la "Scene" de l'interface
+     * La méthode "start" permet d'initialiser et
+     * de modifier les éléments qui se trouve dans
+     * le "Stage" ainsi que la "Scene" de l'interface.
+     * C'est-à-dire dans la fenêtre du programme.
      */
     public void start(Stage primaryStage) throws Exception {
 
 
         /**
-         *
+         * Outils de JavaFX pour initialiser la
+         * fenêtre où sera contenu le programme
          */
         Pane root = new Pane();
 
@@ -67,8 +71,9 @@ public class Vue extends Application {
 
 
         /**
-         * Initialisation du titre pour la
-         * partie gauche de l'interface.
+         * Initialisation du titre "Liste des cours"
+         * pour la partie gauche de l'interface et
+         * modification de l'allure du titre.
          */
         Text titre1 = new Text("Liste des cours");
         titre1.setFont(Font.font("Purisa", 20));
@@ -79,7 +84,9 @@ public class Vue extends Application {
 
         /**
          * Initialisation du tableau interactif présentant
-         * la liste de cours selon la session sélectionnée
+         * la liste de cours selon la session sélectionnée.
+         * De plus, ajout de précision sur l'allure du tableau
+         * ainsi que sur sa position dans la scène.
          */
         TableView<Course> screen = new TableView<Course>();
         screen.setEditable(true);
@@ -104,7 +111,9 @@ public class Vue extends Application {
 
         /**
          * Initialisation des deux séparateurs
-         * (vertical et horizontal)
+         * (vertical et horizontal) entre les
+         * deux partie du programme. Précision
+         * sur leurs positions dans la fenêtre.
          */
         Line sepV = new Line();
         sepV.setStartX(400);
@@ -128,7 +137,8 @@ public class Vue extends Application {
         /**
          * Initialisation du bouton interactif "charger"
          * ainsi que de la liste déroulante mettant en
-         * avant les choix de sessions possible
+         * avant les choix de sessions possible. Précision
+         * sur l'allure des boutons.
          */
         Button charger = new Button("charger");
         charger.setLayoutX(275);
@@ -144,8 +154,8 @@ public class Vue extends Application {
         root.getChildren().add(session);
 
         /**
-         * Initialisation du titre de la
-         * partie droite de l'interface
+         * Initialisation du titre "Formulaire d'inscription"
+         * de la partie droite de l'interface ainsi que son allure.
          */
         Text titre2 = new Text("Formulaire d'inscription");
         titre2.setFont(Font.font("Purisa", 20));
@@ -155,8 +165,9 @@ public class Vue extends Application {
 
 
         /**
-         * Initialisation du bouton d'envoie
-         * du formulaire d'inscription
+         * Initialisation du bouton d'envoi du
+         * formulaire d'inscription en apportant
+         * des précisions sur l'allure de celui-ci.
          */
         Button envoyer = new Button("envoyer");
         envoyer.setLayoutX(600);
@@ -166,11 +177,10 @@ public class Vue extends Application {
 
 
         /**
-         * Initialisation de la zone de remplissage
-         * du formulaire d'inscription. Partie
-         * droite de l'interface graphique
-         *
-         *
+         * Initialisation de la zone de remplissage du formulaire
+         * d'inscription (zone de textes pour le prénom, nom de
+         * famille, email et matricule de l'étudiant). Partie
+         * droite de l'interface graphique.
          */
         ArrayList<String> liste = new ArrayList<String>(4);
         liste.add("Prénom");
@@ -214,6 +224,12 @@ public class Vue extends Application {
             root.getChildren().add(newTitle);
         }
 
+        /**
+         * Cette partie de code permet d'appeler le bouton
+         * "envoyer" en assignant une action. Celle-ci appelle
+         * le méthode "RegistrationRequest" qui inscrit l'élève
+         * à un cours de l'Université de Montréal.
+         */
         envoyer.setOnAction(actionEvent -> {
             String finalUsernNameString = userName.getText();;
             String finalUserLastNameString = userLastName.getText();
@@ -230,17 +246,6 @@ public class Vue extends Application {
                 throw new RuntimeException(e);
             }
         });
-
-
-        /**
-         * Initialisation du bouton d'envoie
-         * du formulaire d'inscription
-         */
-       // Button envoyer = new Button("envoyer");
-       // envoyer.setLayoutX(600);
-       // envoyer.setLayoutY(225);
-       // envoyer.setPrefWidth(100);
-       // root.getChildren().add(envoyer);
 
 
         /**

@@ -12,11 +12,34 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * La classe "Client" prend en considération toutes les informations et les
+ * méthodes nécessaire pour s'inscrire à un cours sans interface graphique.
+ */
 public class Client {
+
+    /**
+     * Permet d'assigner à "REGISTER_COMMAND" la valeur "INSCRIRE" de
+     * manière finale. Celle-ci ne pourra être changée ultérieurement.
+     */
     public final static String REGISTER_COMMAND = "INSCRIRE";
+    /**
+     * Permet d'assigner à "LOAD_COMMAND" la valeur "CHARGER" de
+     * manière finale. Celle-ci ne pourra être changée ultérieurement.
+     */
     public final static String LOAD_COMMAND = "CHARGER";
 
 
+    /**
+     * La méthode "CourseRequest" permet de retourner une liste des cours
+     * pour la session sélectionnée par l'utilisateur du programme.
+     *
+     * @param session La session sélectionnée par l'utilisateur du programme
+     * @return Une liste contenant les cours ainsi que leurs informations de la session choisie
+     * @throws IOException
+     * @throws ClassNotFoundException Est prise en compte si aucune classe n'est trouvée
+     */
     public static ArrayList<Course> CourseRequest(String session) throws IOException, ClassNotFoundException {
 
         Socket server = new Socket("localhost", 1337);
@@ -42,6 +65,18 @@ public class Client {
         return courseList;
     }
 
+    /**
+     * La méthode "RegistrationRequest" permet de s'inscrire
+     * au cours choisit par l'utilisateur du programme.
+     *
+     * @param name Prénom de l'élève qui remplie le formulaire d'inscription
+     * @param familyName Nom de famille de l'élève qui remplie le formulaire d'inscription
+     * @param email Email de l'élève qui remplie le formulaire d'inscription
+     * @param studentNumber Numéro de matricule de l'élève qui remplie le formulaire d'inscription
+     * @param course Cours choisit par l'élève qui remplie le formulaire d'inscription
+     * @throws IOException
+     * @throws ClassNotFoundException Est prise en compte si aucune classe n'est trouvée
+     */
     public static void RegistrationRequest(String name, String familyName, String email, String studentNumber, Course course) throws IOException, ClassNotFoundException {
         String p = REGISTER_COMMAND;
 
@@ -62,6 +97,15 @@ public class Client {
         objectInputStream.close();
         server.close();
     }
+
+    /**
+     * Méthode "main" interactive entre le client et le serveur lors
+     * de l'inscription de l'utilisateur à ses cours. Aucune interface graphique.
+     *
+     * @param args la rêquete envoyée par l'utilisateur du programme
+     * @throws ClassNotFoundException Est prise en compte si aucune classe n'est trouvée
+     * @throws IOException
+     */
     public static void main(String args[]) throws ClassNotFoundException, IOException {
 
         Boolean consultSession = true;
