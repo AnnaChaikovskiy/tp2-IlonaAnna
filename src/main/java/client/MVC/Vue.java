@@ -1,5 +1,6 @@
 package client.MVC;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -92,8 +93,6 @@ public class Vue extends Application {
         screen.getColumns().add(code);
         screen.getColumns().add(name);
 
-
-
         screen.setLayoutX(20);
         screen.setLayoutY(50);
         screen.setPrefHeight(425);
@@ -127,7 +126,7 @@ public class Vue extends Application {
 
 
         /**
-         * Inisialisation du bouton interactif "charger"
+         * Initialisation du bouton interactif "charger"
          * ainsi que de la liste déroulante mettant en
          * avant les choix de sessions possible
          */
@@ -183,29 +182,21 @@ public class Vue extends Application {
         int index = 0;
 
         TextField userName = new TextField();
-        String userNameString = new String();
-        userNameString= userName.getText();
         userName.setLayoutX(575);
         userName.setLayoutY(75);
         root.getChildren().add(userName);
 
         TextField userLastName = new TextField();
-        String userLastNameString = new String();
-        userLastNameString= userLastName.getText();
         userLastName.setLayoutX(575);
         userLastName.setLayoutY(110);
         root.getChildren().add(userLastName);
 
         TextField userEmail = new TextField();
-        String userEmailString = new String();
-        userEmailString= userEmail.getText();
         userEmail.setLayoutX(575);
         userEmail.setLayoutY(145);
         root.getChildren().add(userEmail);
 
         TextField userID = new TextField();
-        String userIDString = new String();
-        userIDString= userID.getText();
         userID.setLayoutX(575);
         userID.setLayoutY(180);
         root.getChildren().add(userID);
@@ -223,14 +214,16 @@ public class Vue extends Application {
             root.getChildren().add(newTitle);
         }
 
-        String finalUsernNameString = userNameString;
-        String finalUserLastNameString = userLastNameString;
-        String finalUserEmailString = userEmailString;
-        String finalUserIDString = userIDString;
-
         envoyer.setOnAction(actionEvent -> {
+            String finalUsernNameString = userName.getText();;
+            String finalUserLastNameString = userLastName.getText();
+            String finalUserEmailString = userEmail.getText();
+            String finalUserIDString = userID.getText();
+            Course object = screen.getSelectionModel().getSelectedItem();
+            if (object != null) {
+                System.out.println(object.getCode());}
             try {
-                Controleur.RegistrationRequest(finalUsernNameString, finalUserLastNameString, finalUserEmailString, finalUserIDString, finalUserEmailString);
+                Controleur.RegistrationRequest(finalUsernNameString, finalUserLastNameString, finalUserEmailString, finalUserIDString, object);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
@@ -268,7 +261,7 @@ public class Vue extends Application {
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println(courseArrayList[0].isEmpty());
+            screen.getItems().clear();
             for (int i=0; i < courseArrayList[0].size() ; i++) {
                 screen.getItems().add(courseArrayList[0].get(i));
             }
