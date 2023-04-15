@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -19,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import server.models.Course;
+import server.models.RegistrationForm;
 
 
 /**
@@ -55,7 +58,6 @@ public class Vue extends Application {
          */
         Scene scene = new Scene(root, 800, 550);
 
-        //controleur = new Controleur(new Modele(), scene);
 
         /**
          * Change de couleur la scène de l'interface
@@ -152,35 +154,6 @@ public class Vue extends Application {
         titre2.setLayoutY(35);
         root.getChildren().add(titre2);
 
-        /**
-         * Initialisation de la zone de remplissage
-         * du formulaire d'inscription. Partie
-         * droite de l'interface graphique
-         */
-        ArrayList<String> liste = new ArrayList<String>(4);
-        liste.add("Prénom");
-        liste.add("Nom");
-        liste.add("Email");
-        liste.add("Matricule");
-
-        int addition = 75;
-        int index = 0;
-        for (int i = 0; i <=3; i++) {
-            TextField whiteSpace = new TextField();
-            whiteSpace.setLayoutX(575);
-            whiteSpace.setLayoutY(addition);
-
-            String element = liste.get(index);
-            Text newTitle = new Text(element);
-            newTitle.setLayoutX(475);
-            newTitle.setLayoutY(addition+15);
-
-            addition = addition + 35;
-            index = index + 1;
-
-            root.getChildren().add(whiteSpace);
-            root.getChildren().add(newTitle);
-        }
 
         /**
          * Initialisation du bouton d'envoie
@@ -192,11 +165,90 @@ public class Vue extends Application {
         envoyer.setPrefWidth(100);
         root.getChildren().add(envoyer);
 
+
         /**
+         * Initialisation de la zone de remplissage
+         * du formulaire d'inscription. Partie
+         * droite de l'interface graphique
+         *
          *
          */
+        ArrayList<String> liste = new ArrayList<String>(4);
+        liste.add("Prénom");
+        liste.add("Nom");
+        liste.add("Email");
+        liste.add("Matricule");
 
-        //controleur = new Controleur(new Modele(), scene, screen);
+        int addition = 75;
+        int index = 0;
+
+        TextField userName = new TextField();
+        String userNameString = new String();
+        userNameString= userName.getText();
+        userName.setLayoutX(575);
+        userName.setLayoutY(75);
+        root.getChildren().add(userName);
+
+        TextField userLastName = new TextField();
+        String userLastNameString = new String();
+        userLastNameString= userLastName.getText();
+        userLastName.setLayoutX(575);
+        userLastName.setLayoutY(110);
+        root.getChildren().add(userLastName);
+
+        TextField userEmail = new TextField();
+        String userEmailString = new String();
+        userEmailString= userEmail.getText();
+        userEmail.setLayoutX(575);
+        userEmail.setLayoutY(145);
+        root.getChildren().add(userEmail);
+
+        TextField userID = new TextField();
+        String userIDString = new String();
+        userIDString= userID.getText();
+        userID.setLayoutX(575);
+        userID.setLayoutY(180);
+        root.getChildren().add(userID);
+
+
+        for (int i = 0; i <=3; i++) {
+            String element = liste.get(index);
+            Text newTitle = new Text(element);
+            newTitle.setLayoutX(475);
+            newTitle.setLayoutY(addition+15);
+
+            addition = addition + 35;
+            index = index + 1;
+
+            root.getChildren().add(newTitle);
+        }
+
+        String finalUsernNameString = userNameString;
+        String finalUserLastNameString = userLastNameString;
+        String finalUserEmailString = userEmailString;
+        String finalUserIDString = userIDString;
+
+        envoyer.setOnAction(actionEvent -> {
+            try {
+                Controleur.RegistrationRequest(finalUsernNameString, finalUserLastNameString, finalUserEmailString, finalUserIDString, finalUserEmailString);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+
+        /**
+         * Initialisation du bouton d'envoie
+         * du formulaire d'inscription
+         */
+       // Button envoyer = new Button("envoyer");
+       // envoyer.setLayoutX(600);
+       // envoyer.setLayoutY(225);
+       // envoyer.setPrefWidth(100);
+       // root.getChildren().add(envoyer);
+
 
         /**
          * Mise à jour des modifications apportées à la scène
@@ -220,6 +272,7 @@ public class Vue extends Application {
             for (int i=0; i < courseArrayList[0].size() ; i++) {
                 screen.getItems().add(courseArrayList[0].get(i));
             }
+
         });
     }
 
